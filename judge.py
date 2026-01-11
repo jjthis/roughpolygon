@@ -24,6 +24,7 @@ def main():
         options = json.load(f)
     
     test_count = options["testCount"]
+    validate = options["validate"]
     problem_dir = f"./problem/{problem_name}"
     tests_dir = f"{problem_dir}/tests"
     
@@ -43,14 +44,15 @@ def main():
             print(stderr)
             sys.exit(1)
         
-        # validate.cpp 컴파일
-        validate_exe = f"{problem_dir}/validate.exe"
-        temp_files.append(validate_exe)
-        success, stdout, stderr = compile_cpp(f"{problem_dir}/validate.cpp", validate_exe)
-        if not success:
-            print(f"validate.cpp 컴파일 실패:")
-            print(stderr)
-            sys.exit(1)
+        if validate:
+            # validate.cpp 컴파일
+            validate_exe = f"{problem_dir}/validate.exe"
+            temp_files.append(validate_exe)
+            success, stdout, stderr = compile_cpp(f"{problem_dir}/validate.cpp", validate_exe)
+            if not success:
+                print(f"validate.cpp 컴파일 실패:")
+                print(stderr)
+                sys.exit(1)
         
         # 테스트케이스 생성 및 검증
         for i in range(1, test_count + 1):
@@ -73,6 +75,10 @@ def main():
             with open(test_file, "w") as f:
                 f.write(result.stdout)
             
+
+            if not validate:
+                continue
+            
             # validate.cpp 실행
             with open(test_file, "r") as f:
                 validate_result = subprocess.run(
@@ -92,7 +98,10 @@ def main():
                     print(f"return code: {validate_result.returncode}")
                 sys.exit(1)
         
-        print(f"모든 테스트케이스({test_count}개) 검증 완료")
+        if validate:
+            print(f"모든 테스트케이스({test_count}개) 생성 및 검증 완료")
+        else:
+            print(f"모든 테스트케이스({test_count}개) 생성 완료")
     finally:
         # 임시 파일 삭제
         for temp_file in temp_files:

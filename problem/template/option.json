@@ -1,4 +1,5 @@
 {
     "testCount": 10,
-    "checker": true
+    "checker": true,
+    "validate": false
 }

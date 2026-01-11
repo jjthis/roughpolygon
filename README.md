@@ -48,12 +48,14 @@ roughpolygon/
 ```json
 {
     "testCount": 10,
-    "checker": false
+    "checker": false,
+    "validate": true
 }
 ```
 
 - `testCount`: 생성/테스트할 테스트케이스 개수
 - `checker`: 채점기 사용 여부 (true/false)
+- `validate`: 데이터 검증 여부 (true/false)
 
 ## 사용 방법
 
